@@ -10,6 +10,8 @@ using Raven.Client.Documents.Changes;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Indexes;
 using Raven.Client.Documents.Session;
+using Raven.Client.ServerWide;
+using Raven.Client.ServerWide.Operations;
 using Raven.Client.Documents.Operations.Expiration;
 using Raven.TestDriver;
 
@@ -23,9 +25,9 @@ namespace Hangfire.Raven.Tests
 
         public TestRepository()
         {
-            _documentStore = GetDocumentStore();
+            _documentStore = GetDocumentStore(null,"hangfire-raven-tests");
 
-            //_documentStore.Maintenance.Server.Send(new CreateDatabaseOperation(new DatabaseRecord(_database)));
+            //_documentStore.Maintenance.Server.Send(new CreateDatabaseOperation(new DatabaseRecord("hangfire-raven-tests")));
             _documentStore.Maintenance.Send(new ConfigureExpirationOperation(new ExpirationConfiguration
             {
                 Disabled = false,
