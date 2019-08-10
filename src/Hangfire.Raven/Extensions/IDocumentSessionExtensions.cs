@@ -57,7 +57,7 @@ namespace Hangfire.Raven.Extensions {
 
         private static DateTime? GetExpiry(IMetadataDictionary metadata) {
             if (metadata.ContainsKey(Constants.Documents.Metadata.Expires))
-                return DateTime.Parse(metadata[Constants.Documents.Metadata.Expires].ToString());
+                return DateTime.Parse(metadata[Constants.Documents.Metadata.Expires].ToString()).ToUniversalTime();
             else
                 return null;
         }
