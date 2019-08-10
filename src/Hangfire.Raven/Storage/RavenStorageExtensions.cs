@@ -1,23 +1,25 @@
 ﻿using System;
 using System.Security.Cryptography.X509Certificates;
 using Hangfire.Raven.Extensions;
+using Raven.Client;
 using Raven.Client.Documents.Session;
 
 namespace Hangfire.Raven.Storage {
     public static class RavenServerStorageExtensions
     {
-        public static void AddExpire<T>(this IAsyncAdvancedSessionOperations advanced, T obj, DateTime dateTime)
+        public static void AddExpire<T>(this IAdvancedSessionOperations advanced, T obj, DateTime dateTime)
         {
-            advanced.GetMetadataFor(obj)["@expires"] = dateTime;
+            advanced.GetMetadataFor(obj)[Constants.Documents.Metadata.Expires] = dateTime;
         }
-        public static void RemoveExpire<T>(this IAsyncAdvancedSessionOperations advanced, T obj)
+
+        public static void RemoveExpire<T>(this IAdvancedSessionOperations advanced, T obj)
         {
-            advanced.GetMetadataFor(obj).Remove("Raven-Expiration-Date");
+            advanced.GetMetadataFor(obj).Remove(Constants.Documents.Metadata.Expires);
         }
-        public static DateTime? GetExpire<T>(this IAsyncAdvancedSessionOperations advanced, T obj)
+        public static DateTime? GetExpire<T>(this IAdvancedSessionOperations advanced, T obj)
         {
-            if (advanced.GetMetadataFor(obj).TryGetValue("Raven-Expiration-Date", out object dateTime)) {
-                return (DateTime)dateTime;
+            if (advanced.GetMetadataFor(obj).TryGetValue(Constants.Documents.Metadata.Expires, out object dateTime)) {
+                return DateTime.Parse(dateTime.ToString()).ToUniversalTime();
             }
             return null;
         }
