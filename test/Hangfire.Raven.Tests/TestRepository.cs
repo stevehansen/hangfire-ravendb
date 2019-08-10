@@ -81,12 +81,6 @@ namespace Hangfire.Raven.Tests
             //return _documentStore.Conventions.FindFullDocumentKeyFromNonStringIdentifier(string.Join("/", id), type, false);
             return type.ToString() + '/' + string.Join("/", id);
         }
-
-        public IAsyncDocumentSession OpenAsyncSession()
-        {
-            return _documentStore.OpenAsyncSession();
-        }
-
         public IDocumentSession OpenSession()
         {
             return _documentStore.OpenSession();
