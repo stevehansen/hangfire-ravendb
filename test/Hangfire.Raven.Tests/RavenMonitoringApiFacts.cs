@@ -139,10 +139,10 @@ namespace Hangfire.Raven.Tests
             {
                 var fetchedJob = CreateJobInState(repository, "1", FetchedStateName);
 
-                var jobIds = new List<string> { fetchedJob.Id };
-                _persistentJobQueueMonitoringApi.Setup(x => x
-                    .GetEnqueuedJobIds(DefaultQueue, From, PerPage))
-                    .Returns(jobIds.Select(x => x.Split(new[] { '/' }, 2)[1]));
+                //var jobIds = new List<string> { fetchedJob.Id };
+                //_persistentJobQueueMonitoringApi.Setup(x => x
+                //    .GetEnqueuedJobIds(DefaultQueue, From, PerPage))
+                //    .Returns(jobIds.Select(x => x.Split(new[] { '/' }, 2)[1]));
 
                 var resultList = monitoringApi.EnqueuedJobs(DefaultQueue, From, PerPage);
 

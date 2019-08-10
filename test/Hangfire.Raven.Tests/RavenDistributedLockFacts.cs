@@ -6,8 +6,9 @@ using Xunit;
 using Hangfire.Raven.DistributedLocks;
 using Hangfire.Raven.Storage;
 using Hangfire.Raven.Entities;
-using Raven.Client.Linq;
+using Raven.Client;
 using System.Linq;
+using Raven.Embedded;
 
 namespace Hangfire.Raven.Tests
 {
@@ -39,7 +40,7 @@ namespace Hangfire.Raven.Tests
         {
             UseStorage(storage =>
             {
-                using (new RavenDistributedLock(storage, "resource1", TimeSpan.Zero, new RavenStorageOptions()))
+                using (new RavenDistributedLock(storage, "resource1", TimeSpan.FromSeconds(1), new RavenStorageOptions()))
                 using (var session = storage.Repository.OpenSession())
                 {
                     var locksCount = session.Query<DistributedLock>().Where(_ => _.Resource == "resource1").Count();
@@ -53,12 +54,14 @@ namespace Hangfire.Raven.Tests
         {
             UseStorage(storage =>
             {
-                using (new RavenDistributedLock(storage, "resource1", TimeSpan.Zero, new RavenStorageOptions()))
+                using (new RavenDistributedLock(storage, "resource1", TimeSpan.FromSeconds(10), new RavenStorageOptions()))
                 using (var session = storage.Repository.OpenSession())
                 {
                     var locksCount = session.Query<DistributedLock>().Where(_ => _.Resource == "resource1").Count();
                     Assert.Equal(1, locksCount);
                 }
+                // TestRepository set to purge expired documents every 3000 ms
+                Thread.Sleep(5000);
                 using (var session = storage.Repository.OpenSession())
                 {
                     var locksCountAfter = session.Query<DistributedLock>().Where(_ => _.Resource == "resource1").Count();
@@ -72,7 +75,7 @@ namespace Hangfire.Raven.Tests
         {
             UseStorage(storage =>
             {
-                using (new RavenDistributedLock(storage, "resource1", TimeSpan.Zero, new RavenStorageOptions()))
+                using (new RavenDistributedLock(storage, "resource1", TimeSpan.FromMinutes(5), new RavenStorageOptions()))
                 {
                     int locksCount;
                     using (var session = storage.Repository.OpenSession())
@@ -96,7 +99,7 @@ namespace Hangfire.Raven.Tests
         {
             UseStorage(storage =>
             {
-                using (new RavenDistributedLock(storage, "resource1", TimeSpan.Zero, new RavenStorageOptions()))
+                using (new RavenDistributedLock(storage, "resource1", TimeSpan.FromSeconds(1), new RavenStorageOptions()))
                 using (var session = storage.Repository.OpenSession())
                 {
                     var locksCount = session.Query<DistributedLock>().Where(_ => _.Resource == "resource1").Count();
@@ -153,7 +156,7 @@ namespace Hangfire.Raven.Tests
         {
             UseStorage(storage =>
             {
-                using (new RavenDistributedLock(storage, "resource1", TimeSpan.Zero, new RavenStorageOptions { DistributedLockLifetime = TimeSpan.FromSeconds(3) }))
+                using (new RavenDistributedLock(storage, "resource1", TimeSpan.FromSeconds(1), new RavenStorageOptions { DistributedLockLifetime = TimeSpan.FromSeconds(3) }))
                 using (var session = storage.Repository.OpenSession())
                 {
                     DateTime initialExpireAt = DateTime.UtcNow;

@@ -6,7 +6,7 @@ using Moq;
 using Xunit;
 using Hangfire.Raven.JobQueues;
 using Hangfire.Raven.Storage;
-using Raven.Client;
+using Raven.Client.Documents.Session;
 using Hangfire.Raven.Entities;
 
 namespace Hangfire.Raven.Tests

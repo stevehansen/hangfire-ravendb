@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using Xunit;
+using Raven.Embedded;
 
 namespace Hangfire.Raven.Tests
 {

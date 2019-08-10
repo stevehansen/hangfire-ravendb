@@ -11,6 +11,7 @@ using Xunit;
 using Hangfire.Raven.JobQueues;
 using Hangfire.Raven.Storage;
 using Hangfire.Raven.Entities;
+using Raven.Embedded;
 
 namespace Hangfire.Raven.Tests
 {
@@ -21,7 +22,7 @@ namespace Hangfire.Raven.Tests
         private readonly PersistentJobQueueProviderCollection _providers;
 
         public RavenConnectionFacts()
-        {
+        {          
             _queue = new Mock<IPersistentJobQueue>();
 
             _provider = new Mock<IPersistentJobQueueProvider>();
@@ -139,7 +140,7 @@ namespace Hangfire.Raven.Tests
                     var ravenJob = session.Query<RavenJob>().Single();
                     Assert.Equal(jobId, ravenJob.Id.Split(new[] { '/' }, 2)[1]);
                     Assert.Equal(createdAt, ravenJob.CreatedAt);
-                    Assert.Equal(null, ravenJob.StateData);
+                    Assert.Null(ravenJob.StateData);
 
                     var invocationData = ravenJob.InvocationData;
 

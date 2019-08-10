@@ -3,6 +3,7 @@ using Hangfire.Raven.Storage;
 using System;
 using System.Linq;
 using Xunit;
+using Raven.Embedded;
 
 namespace Hangfire.Raven.Tests
 {
@@ -10,7 +11,6 @@ namespace Hangfire.Raven.Tests
     {
         private const string JobId = "id";
         private const string Queue = "queue";
-
 
         [Fact]
         public void Ctor_ThrowsAnException_WhenStorageIsNull()
