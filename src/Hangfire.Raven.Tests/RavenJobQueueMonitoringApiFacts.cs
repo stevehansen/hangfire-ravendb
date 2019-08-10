@@ -74,9 +74,9 @@ namespace Hangfire.Raven.Tests
         {
             UseStorage(storage =>
             {
-                var mongoJobQueueMonitoringApi = CreateRavenJobQueueMonitoringApi(storage);
+                var ravenJobQueueMonitoringApi = CreateRavenJobQueueMonitoringApi(storage);
 
-                var enqueuedJobIds = mongoJobQueueMonitoringApi.GetEnqueuedJobIds(QueueName1, 0, 10);
+                var enqueuedJobIds = ravenJobQueueMonitoringApi.GetEnqueuedJobIds(QueueName1, 0, 10);
 
                 Assert.Empty(enqueuedJobIds);
             });

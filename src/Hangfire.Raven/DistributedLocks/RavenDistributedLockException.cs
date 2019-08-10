@@ -3,7 +3,7 @@
 namespace Hangfire.Raven.DistributedLocks
 {
     /// <summary>
-    /// Represents exceptions for distributed lock implementation for MongoDB
+    /// Represents exceptions for distributed lock implementation for RavenDB
     /// </summary>
     [Serializable]
     public class RavenDistributedLockException : Exception
