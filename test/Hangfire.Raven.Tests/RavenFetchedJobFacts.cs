@@ -3,7 +3,6 @@ using Hangfire.Raven.Storage;
 using System;
 using System.Linq;
 using Xunit;
-using Raven.Embedded;
 
 namespace Hangfire.Raven.Tests
 {

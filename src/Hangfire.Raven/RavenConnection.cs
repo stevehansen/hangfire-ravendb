@@ -14,21 +14,20 @@
 // You should have received a copy of the GNU Lesser General Public 
 // License along with Hangfire. If not, see <http://www.gnu.org/licenses/>.
 
+using Hangfire.Common;
+using Hangfire.Raven.DistributedLocks;
+using Hangfire.Raven.Entities;
+using Hangfire.Raven.Extensions;
+using Hangfire.Raven.Storage;
+using Hangfire.Server;
+using Hangfire.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Hangfire.Common;
-using Hangfire.Raven.DistributedLocks;
-using Hangfire.Raven.Entities;
-using Hangfire.Raven.Storage;
-using Hangfire.Server;
-using Hangfire.Storage;
-using Hangfire.Raven.Extensions;
-using Raven.Client.Documents.Operations;
-using Raven.Client.Documents.Commands.Batches;
 
-namespace Hangfire.Raven {
+namespace Hangfire.Raven
+{
     public class RavenConnection : JobStorageConnection {
         private readonly RavenStorage _storage;
 
@@ -52,7 +51,7 @@ namespace Hangfire.Raven {
 
             if (providers.Length != 1) {
                 throw new InvalidOperationException(
-                    $"Multiple provider instances registered for queues: {String.Join(", ", queues)}. You should choose only one type of persistent queues per server instance.");
+                    $"Multiple provider instances registered for queues: {string.Join(", ", queues)}. You should choose only one type of persistent queues per server instance.");
             }
 
             var persistentQueue = providers[0].GetJobQueue();
@@ -153,7 +152,7 @@ namespace Hangfire.Raven {
                 }
 
 
-                if (!job.Parameters.TryGetValue(name, out string value)) {
+                if (!job.Parameters.TryGetValue(name, out var value)) {
                     if (name == "RetryCount") {
                         job.Parameters["RetryCount"] = "0";
                         repository.SaveChanges();
@@ -436,7 +435,7 @@ namespace Hangfire.Raven {
                 }
 
 
-                if (!ravenHash.Fields.TryGetValue(name, out string result)) {
+                if (!ravenHash.Fields.TryGetValue(name, out var result)) {
                     return null;
                 }
 

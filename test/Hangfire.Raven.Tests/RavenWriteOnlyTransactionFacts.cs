@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Hangfire.States;
-using Moq;
-using Xunit;
+﻿using Hangfire.Raven.Entities;
 using Hangfire.Raven.JobQueues;
 using Hangfire.Raven.Storage;
+using Hangfire.States;
+using Moq;
 using Raven.Client.Documents.Session;
-using Hangfire.Raven.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Xunit;
 
 namespace Hangfire.Raven.Tests
 {

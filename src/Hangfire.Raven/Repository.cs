@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using Hangfire.Raven.Extensions;
+﻿using Hangfire.Raven.Extensions;
 using Raven.Client.Documents;
-using Raven.Client.ServerWide.Operations;
-using Raven.Client.ServerWide;
-using Raven.Client.Documents.Session;
 using Raven.Client.Documents.Indexes;
-using Raven.Client.Documents.Operations;
 using Raven.Client.Documents.Operations.Expiration;
+using Raven.Client.Documents.Session;
+using Raven.Client.ServerWide;
+using Raven.Client.ServerWide.Operations;
+using System;
+using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 
 namespace Hangfire.Raven
@@ -24,10 +23,7 @@ namespace Hangfire.Raven
     {
         private Action<T> _action;
 
-        public RepositoryObserver(Action<T> input)
-        {
-            _action = input;
-        }
+        public RepositoryObserver(Action<T> input) => _action = input;
 
         public void OnCompleted()
         {
@@ -39,10 +35,7 @@ namespace Hangfire.Raven
 
         }
 
-        public void OnNext(T value)
-        {
-            _action.Invoke(value);
-        }
+        public void OnNext(T value) => _action.Invoke(value);
     }
 
     public class Repository : IRepository
@@ -65,10 +58,7 @@ namespace Hangfire.Raven
             _database = _documentStore.Database;
         }
 
-        public void ExecuteIndexes(List<AbstractIndexCreationTask> indexes)
-        {
-            _documentStore.ExecuteIndexes(indexes);
-        }
+        public void ExecuteIndexes(List<AbstractIndexCreationTask> indexes) => _documentStore.ExecuteIndexes(indexes);
 
         public void Destroy()
         {

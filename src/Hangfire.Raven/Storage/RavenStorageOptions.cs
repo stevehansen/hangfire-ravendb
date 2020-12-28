@@ -25,7 +25,7 @@ namespace Hangfire.Raven.Storage
 
         public TimeSpan QueuePollInterval
         {
-            get { return _queuePollInterval; }
+            get => _queuePollInterval;
             set
             {
                 var message = $"The QueuePollInterval property value should be positive. Given: {value}.";
@@ -52,7 +52,7 @@ namespace Hangfire.Raven.Storage
 
         public TimeSpan DistributedLockLifetime
         {
-            get { return _distributedLockLifetime; }
+            get => _distributedLockLifetime;
             set
             {
                 var message = $"The DistributedLockLifetime property value should be positive. Given: {value}.";
@@ -72,9 +72,7 @@ namespace Hangfire.Raven.Storage
 
         public IEnumerable<string> QueueNames { get; set; }
 
-        public string ClientId {
-            get { return _clientId; }
-        }
+        public string ClientId => _clientId;
 
     }
 }

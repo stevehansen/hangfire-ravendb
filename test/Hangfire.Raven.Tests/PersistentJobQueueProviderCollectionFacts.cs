@@ -1,8 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using Hangfire.Raven.JobQueues;
 using Moq;
+using System;
+using System.Linq;
 using Xunit;
-using Hangfire.Raven.JobQueues;
 
 namespace Hangfire.Raven.Tests
 {
