@@ -275,7 +275,7 @@ namespace Hangfire.Raven.Storage
                     .Select(p => p.Value)
                     .ToList();
 
-                return DeserializeJobs(jobs, (jsonJob, job, stateData) => new FetchedJobDto {
+                return DeserializeJobs(jobs.Where(t => t.StateData?.Name == "Fetched"), (jsonJob, job, stateData) => new FetchedJobDto {
                     Job = job,
                     State = jsonJob.StateData?.Name,
                     FetchedAt = jsonJob.StateData?.Name == ProcessingState.StateName
@@ -293,7 +293,7 @@ namespace Hangfire.Raven.Storage
                     .Select(p => p.Value)
                     .ToList();
 
-                return DeserializeJobs(jobs, (jsonJob, job, stateData) => new EnqueuedJobDto {
+                return DeserializeJobs(jobs.Where(t => t.StateData?.Name == "Enqueued"), (jsonJob, job, stateData) => new EnqueuedJobDto {
                     Job = job,
                     State = jsonJob.StateData?.Name,
                     EnqueuedAt = jsonJob.StateData?.Name == EnqueuedState.StateName
@@ -307,7 +307,7 @@ namespace Hangfire.Raven.Storage
 
         private Job DeserializeJob(InvocationData invocationData) {
             try {
-                return invocationData.Deserialize();
+                return invocationData.DeserializeJob();
             } catch (JobLoadException) {
                 return null;
             }

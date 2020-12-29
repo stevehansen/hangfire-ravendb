@@ -115,7 +115,7 @@ namespace Hangfire.Raven.DistributedLocks
 
                 throw new DistributedLockTimeoutException(_resource);
             } catch (DistributedLockTimeoutException) {
-                //throw;
+                throw;
             } catch (Exception ex) {
                 throw new RavenDistributedLockException($"Could not place a lock on the resource \'{_resource}\': Check inner exception for details.", ex);
             }

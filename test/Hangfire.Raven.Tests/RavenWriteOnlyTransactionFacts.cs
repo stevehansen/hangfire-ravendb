@@ -242,6 +242,9 @@ namespace Hangfire.Raven.Tests
                 Commit(repository, x =>
                 {
                     x.IncrementCounter("my-key");
+                });
+                Commit(repository, x =>
+                {
                     x.IncrementCounter("my-key");
                 });
 
@@ -307,6 +310,9 @@ namespace Hangfire.Raven.Tests
                 Commit(repository, x =>
                 {
                     x.DecrementCounter("my-key");
+                });
+                Commit(repository, x =>
+                {
                     x.DecrementCounter("my-key");
                 });
 

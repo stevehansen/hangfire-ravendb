@@ -66,7 +66,7 @@ namespace Hangfire.Raven
             job.ThrowIfNull(nameof(job));
             parameters.ThrowIfNull(nameof(parameters));
 
-            var invocationData = InvocationData.Serialize(job);
+            var invocationData = InvocationData.SerializeJob(job);
             var guid = Guid.NewGuid().ToString();
             var ravenJob = new RavenJob {
                 Id = _storage.Repository.GetId(typeof(RavenJob), guid),
@@ -96,7 +96,7 @@ namespace Hangfire.Raven
                 JobLoadException loadException = null;
 
                 try {
-                    job = jobData.InvocationData.Deserialize();
+                    job = jobData.InvocationData.DeserializeJob();
                 } catch (JobLoadException ex) {
                     loadException = ex;
                 }
