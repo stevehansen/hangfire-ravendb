@@ -1,14 +1,14 @@
-using System;
-using System.Linq;
-using System.Threading;
 using Hangfire.Annotations;
+using Hangfire.Logging;
 using Hangfire.Raven.Entities;
+using Hangfire.Raven.Extensions;
 using Hangfire.Raven.Storage;
 using Hangfire.Storage;
-using Hangfire.Logging;
-using System.Linq.Expressions;
 using Raven.Client.Exceptions;
-using Hangfire.Raven.Extensions;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading;
 
 namespace Hangfire.Raven.JobQueues
 {

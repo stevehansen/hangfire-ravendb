@@ -1,14 +1,12 @@
-﻿using System;
+﻿using Hangfire.Raven.DistributedLocks;
+using Hangfire.Raven.Entities;
+using Hangfire.Raven.Storage;
+using Hangfire.Storage;
+using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Hangfire.Storage;
 using Xunit;
-using Hangfire.Raven.DistributedLocks;
-using Hangfire.Raven.Storage;
-using Hangfire.Raven.Entities;
-using Raven.Client;
-using System.Linq;
-using Raven.Embedded;
 
 namespace Hangfire.Raven.Tests
 {

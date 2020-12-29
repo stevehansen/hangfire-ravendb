@@ -1,23 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Hangfire.Annotations;
+using Hangfire.Logging;
 using Hangfire.Raven.Entities;
+using Hangfire.Raven.Extensions;
+using Hangfire.Raven.JobQueues;
 using Hangfire.Raven.Storage;
 using Hangfire.States;
 using Hangfire.Storage;
 using Hangfire.Storage.Monitoring;
-using Hangfire.Logging;
-using Raven.Client.Documents.Session;
-using Raven.Client.Documents.Operations;
 using Raven.Client.Documents.Commands.Batches;
-using Raven.Client;
-using Hangfire.Raven.Extensions;
-using System.Threading.Tasks;
-using System.Threading;
-using Hangfire.Raven.JobQueues;
+using Raven.Client.Documents.Operations;
+using Raven.Client.Documents.Session;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace Hangfire.Raven {
+namespace Hangfire.Raven
+{
     public class RavenWriteOnlyTransaction
         : JobStorageTransaction {
         private static readonly ILog Logger = LogProvider.For<RavenWriteOnlyTransaction>();
@@ -88,9 +86,7 @@ namespace Hangfire.Raven {
             };
         }
 
-        public override void AddJobState(string jobId, IState state) {
-            SetJobState(jobId, state);
-        }
+        public override void AddJobState(string jobId, IState state) => SetJobState(jobId, state);
 
         public override void AddRangeToSet(string key, IList<string> items) {
             key.ThrowIfNull(nameof(key));
@@ -145,9 +141,7 @@ namespace Hangfire.Raven {
             }
         }
 
-        public override void AddToSet(string key, string value) {
-            AddToSet(key, value, 0.0);
-        }
+        public override void AddToSet(string key, string value) => AddToSet(key, value, 0.0);
 
         public override void AddToSet(string key, string value, double score) {
             var id = _storage.Repository.GetId(typeof(RavenSet), key);

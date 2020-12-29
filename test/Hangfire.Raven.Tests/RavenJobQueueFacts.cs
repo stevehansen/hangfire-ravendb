@@ -5,7 +5,6 @@ using System;
 using System.Linq;
 using System.Threading;
 using Xunit;
-using Raven.Embedded;
 
 namespace Hangfire.Raven.Tests
 {
@@ -374,7 +373,7 @@ namespace Hangfire.Raven.Tests
 
         private static CancellationToken CreateTimingOutCancellationToken()
         {
-            var source = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+            var source = new CancellationTokenSource(TimeSpan.FromSeconds(20));
             return source.Token;
         }
 

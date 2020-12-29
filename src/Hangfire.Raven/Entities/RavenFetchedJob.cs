@@ -47,10 +47,11 @@ namespace Hangfire.Raven.Entities
 
         public void Requeue()
         {
-            using (var repository = _storage.Repository.OpenSession()) {
-                var job = repository.Load<JobQueue>(Id);
+            using (var session = _storage.Repository.OpenSession()) {
+                var job = session.Load<JobQueue>(Id);
 
                 job.FetchedAt = null;
+                session.SaveChanges();
             }
 
             _requeued = true;

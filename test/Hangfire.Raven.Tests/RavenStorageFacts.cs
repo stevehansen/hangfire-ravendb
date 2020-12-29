@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Hangfire.Raven.Storage;
 using Hangfire.Storage;
+using System;
 using Xunit;
-using Hangfire.Raven.Storage;
 
 namespace Hangfire.Raven.Tests
 {

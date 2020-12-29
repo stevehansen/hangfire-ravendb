@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
+﻿using Hangfire.Logging;
 using Hangfire.Raven.Entities;
+using Hangfire.Raven.Extensions;
 using Hangfire.Raven.Storage;
-using Hangfire.Logging;
 using Hangfire.Storage;
 using Raven.Client.Exceptions;
-using Hangfire.Raven.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Threading;
 
-namespace Hangfire.Raven.DistributedLocks {
+namespace Hangfire.Raven.DistributedLocks
+{
     public class RavenDistributedLock : IDisposable {
         private static readonly ILog Logger = LogProvider.For<RavenDistributedLock>();
 
@@ -130,7 +131,7 @@ namespace Hangfire.Raven.DistributedLocks {
                         _distributedLock = null;
                     }
                 }
-                if (EventWaitHandle.TryOpenExisting(EventWaitHandleName, out EventWaitHandle eventWaitHandler)) {
+                if (EventWaitHandle.TryOpenExisting(EventWaitHandleName, out var eventWaitHandler)) {
                     eventWaitHandler.Set();
                 }
             } catch (PlatformNotSupportedException) {
