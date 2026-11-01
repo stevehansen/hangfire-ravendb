@@ -17,8 +17,6 @@ namespace Hangfire.Raven.DistributedLocks
         private static readonly ThreadLocal<Dictionary<string, int>> AcquiredLocks
                     = new ThreadLocal<Dictionary<string, int>>(() => new Dictionary<string, int>());
 
-        private static readonly TimeSpan KeepAliveInterval = TimeSpan.FromMinutes(1);
-
         private RavenStorage _storage;
 
         private string _resource;
@@ -145,21 +143,29 @@ namespace Hangfire.Raven.DistributedLocks
         private void StartHeartBeat() {
             Logger.InfoFormat(".Starting heartbeat for resource: {0}", _resource);
 
+            // Renew well before the lock document expires and gets purged while still held.
+            var keepAliveInterval = TimeSpan.FromTicks(_options.DistributedLockLifetime.Ticks / 5);
+
             _heartbeatTimer = new Timer(state => {
                 lock (_lockObject) {
                     try {
                         Logger.InfoFormat("..Heartbeat for resource {0}", _resource);
 
                         using (var session = _storage.Repository.OpenSession()) {
-                            session.SetExpiry(_distributedLock.Id, _options.DistributedLockLifetime);
+                            session.SetExpiry<DistributedLock>(_distributedLock.Id, _options.DistributedLockLifetime);
                             session.SaveChanges();
                         }
                     } catch (Exception ex) {
                         Logger.ErrorFormat("...Unable to update heartbeat on the resource '{0}'. {1}", _resource, ex);
-                        Release();
+                        try {
+                            Release();
+                        } catch (Exception releaseEx) {
+                            // An exception escaping a timer callback crashes the process.
+                            Logger.ErrorFormat("...Unable to release the resource '{0}'. {1}", _resource, releaseEx);
+                        }
                     }
                 }
-            }, null, KeepAliveInterval, KeepAliveInterval);
+            }, null, keepAliveInterval, keepAliveInterval);
         }
     }
 }
