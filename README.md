@@ -1,26 +1,18 @@
 # Hangfire RavenDB
 
-## Build Status
-
-`Platform` | `Master`
---- | ---
-**Windows** | [![Build status](https://ci.appveyor.com/api/projects/status/hcmu0b0p62mbuwen?svg=true)](https://ci.appveyor.com/project/CadyIO/hangfire-ravendb)
-**Linux / OS X** | [![Travis CI Build Status](https://travis-ci.org/CadyIO/hangfire-ravendb.svg?branch=master)](https://travis-ci.org/CadyIO/hangfire-ravendb)
+[![CI](https://github.com/stevehansen/hangfire-ravendb/actions/workflows/ci.yml/badge.svg)](https://github.com/stevehansen/hangfire-ravendb/actions/workflows/ci.yml)
 
 ## Overview
 
-RavenDB job storage for Hangfire
+RavenDB job storage for Hangfire.
+
+Targets .NET Standard 2.0 (.NET Framework 4.6.2+, .NET 8+), Hangfire.Core 1.8 and RavenDB.Client 7.2.
 
 ## Usage
 
 This is how you connect to a ravendb server (local or remote)
 ```csharp
 GlobalConfiguration.Configuration.UseRavenStorage("connection_string", "database_name");
-```
-
-This is how you connect to an embedded ravendb instance
-```csharp
-GlobalConfiguration.Configuration.UseEmbeddedRavenStorage();
 ```
 
 To enqueue a background job you must have the following in the code somewhere at least once or the background job queue will not process
@@ -74,4 +66,3 @@ along with this program.  If not, see [http://www.gnu.org/licenses/](http://www.
 
 ## Known Bugs
 
-Hangfire.Tests requires RavenDB.Client which requires .Net 4.5. Until RavenDB 4.0 is released, Hangfire.Tests cannot be included and run.

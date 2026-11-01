@@ -1,14 +1,16 @@
-﻿using System;
+﻿using Hangfire.Logging;
+using Hangfire.Raven.Entities;
+using Hangfire.Raven.Extensions;
+using Hangfire.Raven.Storage;
+using Hangfire.Storage;
+using Raven.Client.Documents.Session;
+using Raven.Client.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Threading;
-using Hangfire.Raven.Entities;
-using Hangfire.Raven.Storage;
-using Hangfire.Logging;
-using Hangfire.Storage;
-using Raven.Client.Exceptions;
-using Hangfire.Raven.Extensions;
 
-namespace Hangfire.Raven.DistributedLocks {
+namespace Hangfire.Raven.DistributedLocks
+{
     public class RavenDistributedLock : IDisposable {
         private static readonly ILog Logger = LogProvider.For<RavenDistributedLock>();
 
@@ -91,7 +93,7 @@ namespace Hangfire.Raven.DistributedLocks {
                     };
 
                     using (var session = _storage.Repository.OpenSession()) {
-                        session.Advanced.UseOptimisticConcurrency = true;
+                        session.Advanced.OptimisticConcurrencyMode = OptimisticConcurrencyMode.Writes;
 
                         session.Store(_distributedLock);
                         session.SetExpiry(_distributedLock, _options.DistributedLockLifetime);
@@ -130,7 +132,7 @@ namespace Hangfire.Raven.DistributedLocks {
                         _distributedLock = null;
                     }
                 }
-                if (EventWaitHandle.TryOpenExisting(EventWaitHandleName, out EventWaitHandle eventWaitHandler)) {
+                if (EventWaitHandle.TryOpenExisting(EventWaitHandleName, out var eventWaitHandler)) {
                     eventWaitHandler.Set();
                 }
             } catch (PlatformNotSupportedException) {

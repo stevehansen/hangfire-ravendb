@@ -1,8 +1,7 @@
-using System;
-using System.Collections.Generic;
-using Hangfire.Common;
 using Hangfire.Storage;
 using Hangfire.Storage.Monitoring;
+using System;
+using System.Collections.Generic;
 
 namespace Hangfire.Raven.Entities
 {
@@ -10,8 +9,8 @@ namespace Hangfire.Raven.Entities
     {
         public RavenJob()
         {
-            this.Parameters = new Dictionary<string, string>();
-            this.History = new List<StateHistoryDto>();
+            Parameters = new Dictionary<string, string>();
+            History = new List<StateHistoryDto>();
         }
 
         public string Id { get; set; }

@@ -1,11 +1,10 @@
-using System.Collections.Generic;
 using Hangfire.Logging;
 using Hangfire.Raven.Extensions;
 using Hangfire.Raven.JobQueues;
 using Hangfire.Storage;
-using Raven.Client.Documents.Indexes;
 
-namespace Hangfire.Raven.Storage {
+namespace Hangfire.Raven.Storage
+{
     public class RavenStorage : JobStorage
     {
         private readonly RavenStorageOptions _options;
@@ -44,25 +43,16 @@ namespace Hangfire.Raven.Storage {
             InitializeQueueProviders();
         }
 
-        public RavenStorageOptions Options { get { return _options; } }
-        public IRepository Repository { get { return _repository; } }
+        public RavenStorageOptions Options => _options;
+        public IRepository Repository => _repository;
 
         public virtual PersistentJobQueueProviderCollection QueueProviders { get; private set; }
 
-        public override IMonitoringApi GetMonitoringApi()
-        {
-            return new RavenStorageMonitoringApi(this);
-        }
+        public override IMonitoringApi GetMonitoringApi() => new RavenStorageMonitoringApi(this);
 
-        public override IStorageConnection GetConnection()
-        {
-            return new RavenConnection(this);
-        }
+        public override IStorageConnection GetConnection() => new RavenConnection(this);
 
-        public override void WriteOptionsToLog(ILog logger)
-        {
-            logger.Info("Using the following options for Raven job storage:");
-        }
+        public override void WriteOptionsToLog(ILog logger) => logger.Info("Using the following options for Raven job storage:");
 
         private void InitializeQueueProviders()
         {

@@ -42,14 +42,8 @@ namespace Hangfire.Raven.JobQueues
                 : _defaultProvider;
         }
 
-        public IEnumerator<IPersistentJobQueueProvider> GetEnumerator()
-        {
-            return _providers.GetEnumerator();
-        }
+        public IEnumerator<IPersistentJobQueueProvider> GetEnumerator() => _providers.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

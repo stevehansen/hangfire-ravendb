@@ -1,14 +1,15 @@
-using System;
-using System.Linq;
-using System.Threading;
 using Hangfire.Annotations;
+using Hangfire.Logging;
 using Hangfire.Raven.Entities;
+using Hangfire.Raven.Extensions;
 using Hangfire.Raven.Storage;
 using Hangfire.Storage;
-using Hangfire.Logging;
-using System.Linq.Expressions;
+using Raven.Client.Documents.Session;
 using Raven.Client.Exceptions;
-using Hangfire.Raven.Extensions;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading;
 
 namespace Hangfire.Raven.JobQueues
 {
@@ -58,7 +59,7 @@ namespace Hangfire.Raven.JobQueues
                 var fetchCondition = fetchConditions[currentQueryIndex];
                 using (var session = _storage.Repository.OpenSession())
                 {
-                    session.Advanced.UseOptimisticConcurrency = true;
+                    session.Advanced.OptimisticConcurrencyMode = OptimisticConcurrencyMode.Writes;
                     lock (_lockObject)
                     {
                         foreach (var queue in queues)

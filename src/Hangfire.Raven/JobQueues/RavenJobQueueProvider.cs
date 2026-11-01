@@ -19,14 +19,8 @@ namespace Hangfire.Raven.JobQueues
             _monitoringApi = new RavenJobQueueMonitoringApi(storage);
         }
 
-        public IPersistentJobQueue GetJobQueue()
-        {
-            return _jobQueue;
-        }
+        public IPersistentJobQueue GetJobQueue() => _jobQueue;
 
-        public IPersistentJobQueueMonitoringApi GetJobQueueMonitoringApi()
-        {
-            return _monitoringApi;
-        }
+        public IPersistentJobQueueMonitoringApi GetJobQueueMonitoringApi() => _monitoringApi;
     }
 }

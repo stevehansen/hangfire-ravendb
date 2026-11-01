@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Raven.Client.Documents;
-using Raven.Client.Documents.Indexes;
-using Raven.Client.Documents.Operations;
-using Raven.Client.Documents.Queries;
-using Raven.Client.Documents.Queries.Facets;
+﻿using Raven.Client.Documents.Indexes;
 using Raven.Client.Documents.Session;
+using System;
+using System.Collections.Generic;
 
-namespace Hangfire.Raven {
+namespace Hangfire.Raven
+{
     public interface IRepository : IDisposable
     {
         void Create();

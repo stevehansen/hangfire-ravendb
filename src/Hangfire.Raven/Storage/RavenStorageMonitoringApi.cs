@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Hangfire.Annotations;
+﻿using Hangfire.Annotations;
 using Hangfire.Common;
 using Hangfire.Raven.Entities;
+using Hangfire.Raven.Extensions;
+using Hangfire.Raven.JobQueues;
 using Hangfire.States;
 using Hangfire.Storage;
 using Hangfire.Storage.Monitoring;
-using Hangfire.Raven.JobQueues;
-using Raven.Client.Documents.Session;
 using Raven.Client.Documents.Linq;
-using Hangfire.Raven.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace Hangfire.Raven.Storage {
+namespace Hangfire.Raven.Storage
+{
     public class RavenStorageMonitoringApi
         : IMonitoringApi {
         private RavenStorage _storage;
@@ -36,39 +36,21 @@ namespace Hangfire.Raven.Storage {
             return counters.FetchedCount ?? 0;
 
         }
-        public long DeletedListCount() {
-            return GetNumberOfJobsByStateName(DeletedState.StateName);
-        }
-        public long FailedCount() {
-            return GetNumberOfJobsByStateName(FailedState.StateName);
-        }
-        public long ProcessingCount() {
-            return GetNumberOfJobsByStateName(ProcessingState.StateName);
-        }
-        public long ScheduledCount() {
-            return GetNumberOfJobsByStateName(ScheduledState.StateName);
-        }
-        public long SucceededListCount() {
-            return GetNumberOfJobsByStateName(SucceededState.StateName);
-        }
+        public long DeletedListCount() => GetNumberOfJobsByStateName(DeletedState.StateName);
+        public long FailedCount() => GetNumberOfJobsByStateName(FailedState.StateName);
+        public long ProcessingCount() => GetNumberOfJobsByStateName(ProcessingState.StateName);
+        public long ScheduledCount() => GetNumberOfJobsByStateName(ScheduledState.StateName);
+        public long SucceededListCount() => GetNumberOfJobsByStateName(SucceededState.StateName);
         private long GetNumberOfJobsByStateName(string stateName) {
             using (var session = _storage.Repository.OpenSession()) {
                 return session.Query<RavenJob>().Count(x => x.StateData.Name == stateName);
             }
         }
 
-        public IDictionary<DateTime, long> FailedByDatesCount() {
-            return GetTimelineStats("failed");
-        }
-        public IDictionary<DateTime, long> HourlyFailedJobs() {
-            return GetHourlyTimelineStats("failed");
-        }
-        public IDictionary<DateTime, long> HourlySucceededJobs() {
-            return GetHourlyTimelineStats("succeeded");
-        }
-        public IDictionary<DateTime, long> SucceededByDatesCount() {
-            return GetTimelineStats("succeeded");
-        }
+        public IDictionary<DateTime, long> FailedByDatesCount() => GetTimelineStats("failed");
+        public IDictionary<DateTime, long> HourlyFailedJobs() => GetHourlyTimelineStats("failed");
+        public IDictionary<DateTime, long> HourlySucceededJobs() => GetHourlyTimelineStats("succeeded");
+        public IDictionary<DateTime, long> SucceededByDatesCount() => GetTimelineStats("succeeded");
         private Dictionary<DateTime, long> GetHourlyTimelineStats(string type) {
             var endDate = DateTime.UtcNow;
             var dates = new List<DateTime>();
@@ -111,7 +93,7 @@ namespace Hangfire.Raven.Storage {
         public StatisticsDto GetStatistics() {
             using (var session = _storage.Repository.OpenSession()) {
                 session.Query<RavenServer>()
-                    .Statistics(out QueryStatistics stat)
+                    .Statistics(out var stat)
                     .Take(0)
                     .ToList();
 
@@ -198,7 +180,7 @@ namespace Hangfire.Raven.Storage {
                     InSucceededState = true,
                     Result = stateData.ContainsKey("Result") ? stateData["Result"] : null,
                     TotalDuration = stateData.ContainsKey("PerformanceDuration") && stateData.ContainsKey("Latency")
-                        ? (long?)long.Parse(stateData["PerformanceDuration"]) +
+                        ? long.Parse(stateData["PerformanceDuration"]) +
                           (long?)long.Parse(stateData["Latency"])
                         : null,
                     SucceededAt = JobHelper.DeserializeNullableDateTime(stateData["SucceededAt"])
@@ -293,7 +275,7 @@ namespace Hangfire.Raven.Storage {
                     .Select(p => p.Value)
                     .ToList();
 
-                return DeserializeJobs(jobs, (jsonJob, job, stateData) => new FetchedJobDto {
+                return DeserializeJobs(jobs.Where(t => t.StateData?.Name == "Fetched"), (jsonJob, job, stateData) => new FetchedJobDto {
                     Job = job,
                     State = jsonJob.StateData?.Name,
                     FetchedAt = jsonJob.StateData?.Name == ProcessingState.StateName
@@ -311,7 +293,7 @@ namespace Hangfire.Raven.Storage {
                     .Select(p => p.Value)
                     .ToList();
 
-                return DeserializeJobs(jobs, (jsonJob, job, stateData) => new EnqueuedJobDto {
+                return DeserializeJobs(jobs.Where(t => t.StateData?.Name == "Enqueued"), (jsonJob, job, stateData) => new EnqueuedJobDto {
                     Job = job,
                     State = jsonJob.StateData?.Name,
                     EnqueuedAt = jsonJob.StateData?.Name == EnqueuedState.StateName
@@ -325,7 +307,7 @@ namespace Hangfire.Raven.Storage {
 
         private Job DeserializeJob(InvocationData invocationData) {
             try {
-                return invocationData.Deserialize();
+                return invocationData.DeserializeJob();
             } catch (JobLoadException) {
                 return null;
             }

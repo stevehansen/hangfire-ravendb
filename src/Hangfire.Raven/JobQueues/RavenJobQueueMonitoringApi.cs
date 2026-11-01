@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Hangfire.Annotations;
+﻿using Hangfire.Annotations;
 using Hangfire.Raven.Entities;
 using Hangfire.Raven.Extensions;
 using Hangfire.Raven.Storage;
 using Raven.Client.Documents.Linq;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace Hangfire.Raven.JobQueues {
+namespace Hangfire.Raven.JobQueues
+{
     public class RavenJobQueueMonitoringApi
         : IPersistentJobQueueMonitoringApi
     {
