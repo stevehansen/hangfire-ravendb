@@ -266,7 +266,7 @@ namespace Hangfire.Raven.Tests
             var ravenJob = new RavenJob
             {
                 Id = repository.GetId(typeof(RavenJob), jobId),
-                InvocationData = InvocationData.Serialize(job),
+                InvocationData = InvocationData.SerializeJob(job),
                 CreatedAt = DateTime.UtcNow,
                 StateData = new StateData
                 {

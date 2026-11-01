@@ -3,6 +3,7 @@ using Hangfire.Raven.Entities;
 using Hangfire.Raven.Extensions;
 using Hangfire.Raven.Storage;
 using Hangfire.Storage;
+using Raven.Client.Documents.Session;
 using Raven.Client.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -92,7 +93,7 @@ namespace Hangfire.Raven.DistributedLocks
                     };
 
                     using (var session = _storage.Repository.OpenSession()) {
-                        session.Advanced.UseOptimisticConcurrency = true;
+                        session.Advanced.OptimisticConcurrencyMode = OptimisticConcurrencyMode.Writes;
 
                         session.Store(_distributedLock);
                         session.SetExpiry(_distributedLock, _options.DistributedLockLifetime);

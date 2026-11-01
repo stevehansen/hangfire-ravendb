@@ -4,6 +4,7 @@ using Hangfire.Raven.Entities;
 using Hangfire.Raven.Extensions;
 using Hangfire.Raven.Storage;
 using Hangfire.Storage;
+using Raven.Client.Documents.Session;
 using Raven.Client.Exceptions;
 using System;
 using System.Linq;
@@ -58,7 +59,7 @@ namespace Hangfire.Raven.JobQueues
                 var fetchCondition = fetchConditions[currentQueryIndex];
                 using (var session = _storage.Repository.OpenSession())
                 {
-                    session.Advanced.UseOptimisticConcurrency = true;
+                    session.Advanced.OptimisticConcurrencyMode = OptimisticConcurrencyMode.Writes;
                     lock (_lockObject)
                     {
                         foreach (var queue in queues)

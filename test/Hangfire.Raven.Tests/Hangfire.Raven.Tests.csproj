@@ -1,21 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <Version>4.2.0.0</Version>
-    <AssemblyVersion>4.2.0.0</AssemblyVersion>
-    <FileVersion>4.2.0.0</FileVersion>
-    <Description>Tests for RavenDB job storage for Hangfire</Description>
-    <Authors>Refreshing Collective &lt;contact@refreshing.io&gt;</Authors>
-    <Company>Refreshing Collective LLC</Company>
-    <Copyright>Copyright @ Refreshing Collective LLC</Copyright>
-    <PackageLicenseUrl>http://www.gnu.org/licenses/lgpl-3.0.html</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/RefreshingIO/hangfire-ravendb</PackageProjectUrl>
-    <PackageIconUrl>https://avatars2.githubusercontent.com/u/7880472?v=3&amp;s=200</PackageIconUrl>
-    <PackageId>Hangfire.Raven.Tests</PackageId>
-    <PackageTags>Hangfire;AspNet;MVC;OWIN;RavenDB;Long-Running;Background;Fire-And-Forget;Delayed;Recurring;Tasks;Jobs;Scheduler;Threading;Queues</PackageTags>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/RefreshingIO/hangfire-ravendb</RepositoryUrl>
+    <TargetFramework>net10.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,17 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="5.0.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
-    <PackageReference Include="Moq" Version="4.15.2" />
-    <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="RavenDB.Embedded" Version="5.1.2" />
-    <PackageReference Include="RavenDB.Client" Version="5.1.2" />
-    <PackageReference Include="RavenDB.TestDriver" Version="5.1.2" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="Moq" />
+    <PackageReference Include="RavenDB.TestDriver" />
+    <PackageReference Include="xunit.v3" />
   </ItemGroup>
 
 </Project>

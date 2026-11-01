@@ -143,7 +143,7 @@ namespace Hangfire.Raven.Tests
 
                     var invocationData = ravenJob.InvocationData;
 
-                    var job = invocationData.Deserialize();
+                    var job = invocationData.DeserializeJob();
                     Assert.Equal(typeof(RavenConnectionFacts), job.Type);
                     Assert.Equal("SampleMethod", job.Method.Name);
                     Assert.Equal("Hello", job.Args[0]);
@@ -188,7 +188,7 @@ namespace Hangfire.Raven.Tests
                 var ravenJob = new RavenJob
                 {
                     Id = repository.GetId(typeof(RavenJob), jobId),
-                    InvocationData = InvocationData.Serialize(job),
+                    InvocationData = InvocationData.SerializeJob(job),
                     StateData = new StateData { Name = "Succeeded" },
                     CreatedAt = DateTime.UtcNow
                 };

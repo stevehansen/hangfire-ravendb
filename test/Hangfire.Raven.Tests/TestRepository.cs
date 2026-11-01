@@ -1,17 +1,11 @@
-﻿//using Raven.Abstractions.Data;
-
-//using Raven.Client.Indexes;
-//using Raven.Client.Embedded;
-//using Raven.Embedded;
-using Raven.Client.Documents;
+﻿using Raven.Client.Documents;
 using Raven.Client.Documents.Indexes;
 using Raven.Client.Documents.Operations.Expiration;
 using Raven.Client.Documents.Session;
+using Raven.Embedded;
 using Raven.TestDriver;
 using System;
 using System.Collections.Generic;
-
-//using Hangfire.Raven.Listeners;
 
 namespace Hangfire.Raven.Tests
 {
@@ -19,23 +13,27 @@ namespace Hangfire.Raven.Tests
     {
         private readonly IDocumentStore _documentStore;
 
+        static TestRepository()
+        {
+            // RavenDB 6+ refuses to start an embedded server without a license; tests run unlicensed.
+            ConfigureServer(new TestServerOptions
+            {
+                Licensing = new ServerOptions.LicensingOptions { ThrowOnInvalidOrMissingLicense = false }
+            });
+        }
+
         public TestRepository()
         {
-            _documentStore = GetDocumentStore(null,"hangfire-raven-tests");
+            _documentStore = GetDocumentStore(null, "hangfire-raven-tests");
 
-            //_documentStore.Maintenance.Server.Send(new CreateDatabaseOperation(new DatabaseRecord("hangfire-raven-tests")));
             _documentStore.Maintenance.Send(new ConfigureExpirationOperation(new ExpirationConfiguration
             {
                 Disabled = false,
                 DeleteFrequencyInSec = 3
             }));
-
-            //_documentStore.Listeners.RegisterListener(new NoStaleQueriesListener());
-            //_documentStore.Listeners.RegisterListener(new TakeNewestConflictResolutionListener());
-            //_documentStore.Initialize();
-
-            //new RavenDocumentsByEntityName().Execute(_documentStore.DatabaseCommands, _documentStore.Conventions);
         }
+
+        public IDocumentStore DocumentStore => _documentStore;
 
         public void Create()
         {
@@ -45,41 +43,10 @@ namespace Hangfire.Raven.Tests
         {
         }
 
-        //public void Dispose()
-        //{
-        //    _documentStore.Dispose();
-        //}
+        public void ExecuteIndexes(List<AbstractIndexCreationTask> indexes) => _documentStore.ExecuteIndexes(indexes);
 
-        //public IDisposable DocumentChange(Type documentType, Action<DocumentChangeNotification> action)
-        //{
-        //    return _documentStore.Changes().ForDocumentsStartingWith(GetId(documentType, ""))
-        //        .Subscribe(new RepositoryObserver<DocumentChangeNotification>(action));
-        //}
+        public string GetId(Type type, params string[] id) => type.ToString() + '/' + string.Join("/", id);
 
-        //public IDisposable DocumentChange(Type documentType, string suffix, Action<DocumentChangeNotification> action)
-        //{
-        //    return _documentStore.Changes().ForDocumentsStartingWith(GetId(documentType, string.Format("{0}/", suffix)))
-        //        .Subscribe(new RepositoryObserver<DocumentChangeNotification>(action));
-        //}
-
-        public void ExecuteIndexes(List<AbstractIndexCreationTask> indexes)
-        {
-            _documentStore.ExecuteIndexes(indexes);
-        }
-
-        //public FacetResults GetFacets(string index, IndexQuery query, List<Facet> facets)
-        //{
-        //    return _documentStore.DatabaseCommands.GetFacets(index, query, facets);
-        //}
-
-        public string GetId(Type type, params string[] id)
-        {
-            //return _documentStore.Conventions.FindFullDocumentKeyFromNonStringIdentifier(string.Join("/", id), type, false);
-            return type.ToString() + '/' + string.Join("/", id);
-        }
-        public IDocumentSession OpenSession()
-        {
-            return _documentStore.OpenSession();
-        }
+        public IDocumentSession OpenSession() => _documentStore.OpenSession();
     }
 }
