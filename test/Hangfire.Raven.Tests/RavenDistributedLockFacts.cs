@@ -103,11 +103,14 @@ namespace Hangfire.Raven.Tests
                     var locksCount = session.Query<DistributedLock>().Where(_ => _.Resource == "resource1").Count();
                     Assert.Equal(1, locksCount);
 
-                    Task.Run(() =>
-                    {
-                        Assert.Throws<DistributedLockTimeoutException>(() =>
-                                new RavenDistributedLock(storage, "resource1", TimeSpan.Zero, new RavenStorageOptions()));
-                    }).Wait();
+                    // A dedicated thread: Task.Wait may inline a task on this thread, where the lock is re-entrant.
+                    Exception exception = null;
+                    var thread = new Thread(() => exception = Record.Exception(() =>
+                        new RavenDistributedLock(storage, "resource1", TimeSpan.Zero, new RavenStorageOptions())));
+                    thread.Start();
+                    thread.Join();
+
+                    Assert.IsType<DistributedLockTimeoutException>(exception);
                 }
             });
         }
@@ -154,10 +157,11 @@ namespace Hangfire.Raven.Tests
         {
             UseStorage(storage =>
             {
-                using (new RavenDistributedLock(storage, "resource1", TimeSpan.FromSeconds(1), new RavenStorageOptions { DistributedLockLifetime = TimeSpan.FromSeconds(3) }))
+                var lifetime = TimeSpan.FromSeconds(3);
+                using (new RavenDistributedLock(storage, "resource1", TimeSpan.FromSeconds(1), new RavenStorageOptions { DistributedLockLifetime = lifetime }))
                 using (var session = storage.Repository.OpenSession())
                 {
-                    DateTime initialExpireAt = DateTime.UtcNow;
+                    DateTime initialExpireAt = DateTime.UtcNow + lifetime;
                     Thread.Sleep(TimeSpan.FromSeconds(5));
 
                     DistributedLock lockEntry = session.Query<DistributedLock>().Where(_ => _.Resource == "resource1").FirstOrDefault();
